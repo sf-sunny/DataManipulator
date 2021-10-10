@@ -1,9 +1,9 @@
 package ui;
 
-import model.DataManipulator;
+import model.Data;
 
 public class Main {
     public static void main(String[] args) {
-        new DataManipulator();
+        new Data();
     }
 }
