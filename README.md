@@ -5,7 +5,8 @@ This application helps users who want to manipulate and visualize data to do so.
 
 ## User Stories
 ### Some *functions* that user could do:
-- *choose* a column as **index** for the csv files
+- *import* csv files
+- *specify* data types of each columns in the csv files
 - do *arithmetics* on columns
-- *concatenate* csv files by index
+- *concatenate* csv files
 - *choose(add)* columns onto a graph for **data visualization**
