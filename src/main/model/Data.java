@@ -231,6 +231,10 @@ public class Data {
         names.remove(data.get(colNum).getName());
         data.remove(colNum);
         numOfCol--;
+
+        if (getNumOfCol() == 0) {
+            numOfRow = 0;
+        }
     }
 
 
@@ -294,11 +298,7 @@ public class Data {
 
     //EFFECT: return true if Data is empty
     public boolean isEmpty() {
-        if (getNumOfCol() == 0 && getNumOfRow() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return getNumOfCol() == 0;
     }
 
     //EFFECT: return true if any column in data has type == "i" or type == "d"

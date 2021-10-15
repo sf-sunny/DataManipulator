@@ -301,8 +301,24 @@ class DataTest {
         Data d1 = new Data();
         assertTrue(d1.isEmpty());
         Column col = new Column();
-        d1.addCol(col);
+        d1.copyFromData(d);
+        d1.removeRow(0);
+        d1.removeRow(0);
+        d1.removeRow(0);
+        d1.removeRow(0);
+        d1.removeRow(0);
+        assertEquals(d1.getNumOfCol(), 4);
+        assertEquals(d1.getNumOfRow(), 0);
         assertFalse(d1.isEmpty());
+
+        d1.copyFromData(d);
+        d1.removeCol(0);
+        d1.removeCol(0);
+        d1.removeCol(0);
+        d1.removeCol(0);
+        assertEquals(d1.getNumOfCol(), 0);
+        assertEquals(d1.getNumOfRow(), 0);
+        assertTrue(d1.isEmpty());
     }
 
     @Test
