@@ -68,11 +68,11 @@ public class Column {
     //MODIFIES: this
     //EFFECTS: cast type of the Object in as colType
     public void specify(int index, String colType) {
-        if (colType == "i") {
+        if (colType.equals("i")) {
             column.set(index, (int) Double.parseDouble(column.get(index).toString()));
-        } else if (colType == "d") {
+        } else if (colType.equals("d")) {
             column.set(index, Double.valueOf(column.get(index).toString()));
-        } else if (colType == "s") {
+        } else if (colType.equals("s")) {
             column.set(index, column.get(index).toString());
         }
     }
@@ -133,7 +133,7 @@ public class Column {
         List<Object> anotherList = another.getColAsList();
         List<Object> finalList = new LinkedList<>();
         Boolean bothInt;
-        if ((another.getType() == "i") && (type == "i")) {
+        if ((another.getType().equals("i")) && (type.equals("i"))) {
             bothInt = true;
         } else {
             bothInt = false;
@@ -158,7 +158,7 @@ public class Column {
         List<Object> finalList = new LinkedList<>();
         Boolean bothInt;
 
-        if ((another.getType() == "i") && (type == "i")) {
+        if ((another.getType().equals("i")) && (type.equals("i"))) {
             bothInt = true;
         } else {
             bothInt = false;
@@ -183,7 +183,7 @@ public class Column {
         List<Object> finalList = new LinkedList<>();
         Boolean bothInt;
 
-        if ((another.getType() == "i") && (type == "i")) {
+        if ((another.getType().equals("i")) && (type.equals("i"))) {
             bothInt = true;
         } else {
             bothInt = false;
@@ -207,12 +207,11 @@ public class Column {
     //          of elements of this.column divided by elements of another column.
     //          Note that the effect of dividing by 0 is the same as applying "/" operator to float number
     public Column divideDouble(Column another) {
-        List<Object> anotherList = another.getColAsList();
         List<Object> finalList = new LinkedList<>();
 
         int i = 0;
         for (Object o:column) {
-            finalList.add(Double.parseDouble(o.toString()) / Double.parseDouble(anotherList.get(i).toString()));
+            finalList.add(Double.parseDouble(o.toString()) / Double.parseDouble(another.get(i).toString()));
             i++;
         }
 
@@ -275,7 +274,7 @@ public class Column {
     //EFFECTS: return True if actual type of elements of column is Integer or Double,
     //          return False otherwise.
     public Boolean checkIfArithmetic() {
-        return ((type == "i") || (type == "d"));
+        return ((type.equals("i") || type.equals("d")));
     }
 
     //REQUIRES: Column another has same exact and unique elements as this.column
@@ -295,6 +294,11 @@ public class Column {
         for (Integer i:positionInAnother) {
             addElement(another.get(i));
         }
+    }
+
+    //EFFECTS: return true if column contains o, else return false
+    public boolean contains(Object o) {
+        return getColAsList().contains(o);
     }
 
 }

@@ -111,10 +111,10 @@ public class Data {
     }
 
 
-    //REQUIRES: a string with length == numOfColumn and it only consist of valid datatype initials
+    //REQUIRES: a string valid datatype initials
     //MODIFIES: this
     //EFFECTS: change actual type of elements of columns
-    void specifyColType(Column col, String colType) {
+    public void specifyColType(Column col, String colType) {
         col.specifyType(colType);
     }
 
@@ -123,7 +123,7 @@ public class Data {
     //MODIFIES: this
     //EFFECTS: add a row at the bottom of the Data,
     //         and specify every elements according to corresponding column's datatype
-    void addRow(List<Object> list) {
+    public void addRow(List<Object> list) {
         int i = 0;
         for (Column col:data) {
             col.addElement(list.get(i));
@@ -135,7 +135,7 @@ public class Data {
 
     //REQUIRES: a String name that exist in this.names
     //EFFECT: remove the first occurring column with its column.name() == name
-    void removeRow(int i) {
+    public void removeRow(int i) {
         for (Column col:data) {
             col.remove(i);
         }
@@ -146,7 +146,7 @@ public class Data {
     //          0 < index < numOfCol
     //MODIFIES: this
     //EFFECT: remove the first occurring row with its index == o
-    void removeRow(Object o) {
+    public void removeRow(Object o) {
         int i = getCol(this.index).getIndexByObject(o);
         removeRow(i);
     }
@@ -154,7 +154,7 @@ public class Data {
     //REQUIRES: two columns with their types belongs to Number, and a valid operator(op) (+ or - or * or /)
     //MODIFIES: this
     //EFFECT: add resulting columns into data if operator is valid, else do nothing
-    void arithmetics(Column col1, String op, Column col2) {
+    public void arithmetics(Column col1, String op, Column col2) {
         Column result;
         if (op.equals("+")) {
             result = col1.add(col2);
@@ -208,7 +208,7 @@ public class Data {
     //MODIFIES: this
     //EFFECT: if a col.name is in data.names, replace that column in data by col
     //          else, add a Column object to data.
-    void addCol(Column col) {
+    public void addCol(Column col) {
         if (names.contains(col.getName())) {
             int i = names.indexOf(col.getName());
             data.set(i, col);
@@ -222,7 +222,7 @@ public class Data {
     //REQUIRES: 0 <= colNum < numOfCol
     //MODIFIES: this
     //EFFECT: remove a Column object, data[index], in data
-    void removeCol(int colNum) {
+    public void removeCol(int colNum) {
         if (colNum == index) {
             index = -1;
         } else if (colNum < index) {
@@ -236,7 +236,7 @@ public class Data {
 
     //REQUIRES: a String name that exist in this.names
     //EFFECT: remove the first occurring column with its column.name() == name
-    void removeCol(String name) {
+    public void removeCol(String name) {
         int colNum = names.indexOf(name);
         removeCol(colNum);
     }
@@ -296,4 +296,16 @@ public class Data {
     public boolean isEmpty() {
         return (numOfCol == 0 && numOfRow == 0);
     }
+
+    //EFFECT: return true if any column in data has type == "i" or type == "d"
+    public boolean checkIfAnyArithmetics() {
+        for (Column col:getData()) {
+            if (col.checkIfArithmetic()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

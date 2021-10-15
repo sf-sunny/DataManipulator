@@ -57,6 +57,9 @@ class DataTest {
         assertEquals(d.getColType(1), "o");
         assertEquals(d.getColType(2), "i");
         assertEquals(d.getColType(3), "d");
+
+        d.specifyColType(d.getCol(2), "d");
+        assertEquals(d.getCol("Age").get(0), 17.0);
     }
 
     @Test
@@ -297,6 +300,18 @@ class DataTest {
         assertFalse(d.isEmpty());
         Data d1 = new Data();
         assertTrue(d1.isEmpty());
+    }
+
+    @Test
+    void checkIfAnyArithmeticsTest() {
+        assertTrue(d.checkIfAnyArithmetics());
+
+        d.specifyColType(d.getCol(0), "s");
+        d.specifyColType(d.getCol(1), "o");
+        d.specifyColType(d.getCol(2), "s");
+        d.specifyColType(d.getCol(3), "s");
+
+        assertFalse(d.checkIfAnyArithmetics());
     }
 
 }

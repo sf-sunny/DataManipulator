@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ColumnTest {
     Column colI, colD, colS;
@@ -406,7 +407,7 @@ public class ColumnTest {
     }
 
     @Test
-    void insertElementInOrder() {
+    void insertElementInOrderTest() {
         List<Object> list1 = new LinkedList<>();
         list1.add("Sam");
         list1.add("Ada");
@@ -437,9 +438,15 @@ public class ColumnTest {
         assertEquals(col.get(2), 17);
         assertEquals(col.get(3), -27);
 
-
-
     }
+
+    @Test
+    void containsTest() {
+        assertTrue(colI.contains(-7));
+        assertFalse(colS.contains("a"));
+    }
+
+
 
 
 }
