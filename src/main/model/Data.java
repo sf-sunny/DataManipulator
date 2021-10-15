@@ -298,7 +298,7 @@ public class Data {
 
     //EFFECT: return true if Data is empty
     public boolean isEmpty() {
-        return getNumOfCol() == 0;
+        return (getNumOfCol() == 0);
     }
 
     //EFFECT: return true if any column in data has type == "i" or type == "d"
