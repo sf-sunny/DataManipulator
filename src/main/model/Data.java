@@ -294,7 +294,11 @@ public class Data {
 
     //EFFECT: return true if Data is empty
     public boolean isEmpty() {
-        return (numOfCol == 0 && numOfRow == 0);
+        if (numOfCol == 0 && numOfRow == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     //EFFECT: return true if any column in data has type == "i" or type == "d"
