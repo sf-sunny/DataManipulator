@@ -381,5 +381,65 @@ public class ColumnTest {
         assertFalse(col1.checkIfArithmetic());
     }
 
+    @Test
+    void checkPositionInAnother() {
+        List<Object> list1 = new LinkedList<>();
+        list1.add("Sam");
+        list1.add("Ada");
+        list1.add("Mada");
+        list1.add("Joshua");
+        Column name1 = new Column("name1", list1, "s");
+
+        List<Object> list2 = new LinkedList<>();
+        list2.add("Mada");
+        list2.add("Ada");
+        list2.add("Joshua");
+        list2.add("Sam");
+        Column name2 = new Column("name2", list2, "s");
+
+        List<Integer> position = name1.checkPositionInAnother(name2);
+        assertEquals(position.get(0), 3);
+        assertEquals(position.get(1), 1);
+        assertEquals(position.get(2), 0);
+        assertEquals(position.get(3), 2);
+
+    }
+
+    @Test
+    void insertElementInOrder() {
+        List<Object> list1 = new LinkedList<>();
+        list1.add("Sam");
+        list1.add("Ada");
+        list1.add("Mada");
+        list1.add("Joshua");
+        Column name1 = new Column("name1", list1, "s");
+
+        List<Object> list2 = new LinkedList<>();
+        list2.add("Mada");
+        list2.add("Ada");
+        list2.add("Joshua");
+        list2.add("Sam");
+        Column name2 = new Column("name2", list2, "s");
+
+        List<Integer> position = name1.checkPositionInAnother(name2);
+
+        List<Object> list3 = new LinkedList<>();
+        list3.add("17");
+        list3.add("21");
+        list3.add("-27");
+        list3.add("53");
+        Column colToInsert = new Column("colToInsert", list3, "i");
+
+        Column col = new Column();
+        col.insertElementInOrder(colToInsert, position);
+        assertEquals(col.get(0), 53);
+        assertEquals(col.get(1), 21);
+        assertEquals(col.get(2), 17);
+        assertEquals(col.get(3), -27);
+
+
+
+    }
+
 
 }

@@ -15,6 +15,7 @@ public class Data {
     private Integer index; //-1 means index has not been set
     private static final String UTF8_BOM = "\uFEFF";
 
+    //EFFECTS: create an empty Data with index = -1 (means index hasn't been assigned)
     public Data() {
         data = new LinkedList<>();
         names = new LinkedList<>();
@@ -23,15 +24,20 @@ public class Data {
         index = -1;
     }
 
-    public Data(Data d) {
+    //REQUIRES: a valid Data d
+    //MODIFIES: this
+    //EFFECTS: make a copy from another Data d
+    public void copyFromData(Data d) {
         data = new LinkedList<>();
         data.addAll(d.getData());
+        names = new LinkedList<>();
+        names.addAll(d.getNames());
         numOfCol = d.getNumOfCol();
         numOfRow = d.getNumOfRow();
-        index = -1;
+        index = d.getIndex();
     }
 
-    //NOT
+
     //REUQIRES: a column exist in data.column
     //MODIFIES: this
     //EFFECTS: if all elements in col are unique,
@@ -47,15 +53,6 @@ public class Data {
     }
 
 
-    // functions to be added:
-    //setIndex (assume unique) done
-    //addRow done
-    //delRow
-    //delCol done
-    //getColByName (assume column names are unique) done
-    //del(Element) done
-    //add(Element) done
-    //specifyElement done
 
     //MODIFIES: this
     //EFFECTS: return true if:
@@ -64,7 +61,6 @@ public class Data {
     //          and also update numOfCol and numOfRow,
     //          Assume: first row is names of columns
     //         return false if files cannot be read successfully
-    @SuppressWarnings("methodlength")
     Boolean importFile(String filePath) {
         File file = new File("data/" + filePath);
         int r = 0;
@@ -90,6 +86,11 @@ public class Data {
         return true;
     }
 
+    //REQUIRES: working lineScanner, correct row number r
+    //EFFECTS: skip any string starts with UTF8_BOM,
+    //          for the first row (r==0), create and rename a new Column, then add to this.data
+    //          for other rows, add elements to corresponding column
+    //          return the total number of columns
     private int scanItemsInLine(Scanner lineScanner, int r) {
         int c = 0;
         while (lineScanner.hasNext()) {
@@ -131,7 +132,7 @@ public class Data {
         numOfRow++;
     }
 
-    //NOT TESTED
+
     //REQUIRES: a String name that exist in this.names
     //EFFECT: remove the first occurring column with its column.name() == name
     void removeRow(int i) {
@@ -167,41 +168,39 @@ public class Data {
         addCol(result);
     }
 
-    //REQUIRES: two Data object that share the same index column,
-    //
+    //REQUIRES: two Data object that share the same index column
+    //          (orders can be different, but size and elemnts have to be the same),
     //MODIFIES: this
-    //EFFECT: add columns of another Data into data
-    void public Boolean concatenate(Data another) {
+    //EFFECT: add columns of another Data into data if there is no the same column name in data,
+    //          otherwise if there is the same column name in another,
+    //          replace that column which has the same name in data by the column in another
+    //        If the above actions can be done, return true, otherwise return false
+    public boolean concatenate(Data another) {
         if (getCol(index).checkEqualsUnique(another.getCol(another.getIndex()))) {
-            list<int> positionInAnother =
+            List<Integer> positionInAnother = checkIndexPositionInAnother(another);
             int tmp = 0;
             for (Column col:another.getData()) { //loop through columns in another
                 if (tmp != another.getIndex()) {
-
                     Column newCol = new Column(col.getName(), new LinkedList<>(), col.getType());
-
-                    for (Object o : getCol(this.index).getColAsList()) {
-                        int i = col.get(another.getIndex()).getIndexByObject(o);
-                        newCol.add(col)
-                    }
+                    newCol.insertElementInOrder(col, positionInAnother);
                     addCol(newCol);
                 }
+                tmp++;
             }
+            return true;
         }
         return false;
-
     }
 
-    void private List<int> checkPositionInAnother() {
-
+    //REQUIRES: Index column of another should have same and unique elements as Index column of this.column
+    //EFFECTS: return a list of position of elements in Index column of another
+    //          (w.r.t. Index column ofthis.column)
+    public List<Integer> checkIndexPositionInAnother(Data another) {
+        Column colAnother = another.getCol(another.getIndex());
+        Column col = getCol((getIndex()));
+        return col.checkPositionInAnother(colAnother);
     }
 
-//    //REQUIRES: valid x-axis column that all columns on y-axis has valid data w.r.t that x-axis column,
-//    //          and string with valid chart types(bar/line)
-//    //EFFECT: show plots of one or several columns
-//    void visualize(Column x, Data y, String type) {
-//
-//    }
 
     //REQUIRES: a Column object which has the length == numOfRow
     //MODIFIES: this
@@ -218,7 +217,6 @@ public class Data {
         }
     }
 
-    //NOT TESTED
     //REQUIRES: 0 <= colNum < numOfCol
     //MODIFIES: this
     //EFFECT: remove a Column object, data[index], in data
@@ -254,10 +252,14 @@ public class Data {
         return getCol(colNum);
     }
 
+    //REQUIRES: valid column number (>=0 and < data.numOfColumn())
+    //EFFECT: return initials of datatype of that column
     String getColType(Integer colNum) {
         return getCol(colNum).getType();
     }
 
+    //REQUIRES: valid column name (exist in this.names)
+    //EFFECT: return initials of datatype of the first column which has the same name as name
     String getColType(String name) {
         int colNum = names.indexOf(name);
         return getColType(colNum);
@@ -273,11 +275,18 @@ public class Data {
         return numOfRow;
     }
 
+    //EFFECT: return column number of index
     int getIndex() {
         return index;
     }
 
+    //EFFECT: return a list of columns of data
     private List<Column> getData() {
         return data;
+    }
+
+    //EFFECT: return a list of names of columns in data
+    public List<String> getNames() {
+        return names;
     }
 }

@@ -145,12 +145,70 @@ class DataTest {
 
     }
 
+    @Test
+    void checkIndexPositionInAnotherTest() {
+        Data data2 = new Data();
+        data2.importFile("testConcatName.csv");
+
+        //setIndex
+        data2.setIndex(data2.getCol("Name"));
+        d.setIndex(d.getCol("Name"));
+
+        List<Integer> pos = d.checkIndexPositionInAnother(data2);
+        assertEquals(pos.get(0),3);
+        assertEquals(pos.get(1),2);
+        assertEquals(pos.get(2),0);
+        assertEquals(pos.get(3),1);
+        assertEquals(pos.get(4),4);
+
+    }
     //concatenate
     @Test
-    void concatTest() {
-        Data data2 = new Data(d);
+    void concatTestOnName() {
+        Data data2 = new Data();
+        data2.importFile("testConcatName.csv");
 
+        //setIndex
+        data2.setIndex(data2.getCol("Name"));
+        d.setIndex(d.getCol("Name"));
 
+        d.concatenate(data2);
+        assertEquals(d.getNumOfRow(), 5);
+        assertEquals(d.getNumOfCol(), 6);
+
+        //Age update on Jacky
+        d.specifyColType(d.getCol("Age"), "i");
+        assertEquals(d.getCol("Age").get(3), 29);
+        assertEquals(d.getCol("Age").get(0), 17);
+
+        d.specifyColType(d.getCol("Score"), "i");
+        assertEquals(d.getCol("Score").get(1), 57);
+
+        assertEquals(d.getCol("Sex").get(4), "X");
+    }
+
+    @Test
+    void concatTestOnDiffName() {
+        Data data2 = new Data();
+        data2.importFile("testConcatDiffName.csv");
+
+        //setIndex
+        data2.setIndex(data2.getCol("Name"));
+        d.setIndex(d.getCol("Name"));
+
+        assertFalse(d.concatenate(data2));
+    }
+    @Test
+    void concatTestSame() {
+        Data data = new Data();
+        data.copyFromData(d);
+
+        data.setIndex(data.getCol("Name"));
+        d.setIndex(d.getCol("Name"));
+
+        data.concatenate(d);
+        assertEquals(data.getNumOfRow(), 5);
+        assertEquals(data.getNumOfCol(), 4);
     }
 
 

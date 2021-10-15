@@ -12,13 +12,14 @@ public class Column {
     //type can be "i" = Integer, "d" = Double, "s" = String, "o" = Object(unspecified/default)
     private Integer size;
 
-
+    //EFFECTS: construct a empty Column with type="o", name = ""
     public Column() {
         column = new LinkedList<>();
         name = "";
         type = "o";
         size = 0;
     }
+
 
     //REQUIRES: non-empty string on name,
     //          Apparent type of elemnts in List has be Object
@@ -116,7 +117,6 @@ public class Column {
         size--;
     }
 
-    //NOT TESTED
     //REQUIRES: Object whose Actual type should be compatible with this.type
     //MODIFIES: this
     //EFFECTS: add the element to the end of column and cast its type to this.type
@@ -278,5 +278,23 @@ public class Column {
         return ((type == "i") || (type == "d"));
     }
 
+    //REQUIRES: Column another has same exact and unique elements as this.column
+    //EFFECTS: return a list of positions in another w.r.t. this.column
+    public List<Integer> checkPositionInAnother(Column another) {
+        List<Integer> positionInAnother = new LinkedList<>();
+        for (Object o:getColAsList()) {
+            positionInAnother.add(another.getColAsList().indexOf(o));
+        }
+        return positionInAnother;
+    }
+
+    //REQUIRES: Column another has same length as this.column
+    //MODIFIES: this
+    //EFFECTS: add elements of another according to positionInAnother
+    public void insertElementInOrder(Column another, List<Integer> positionInAnother) {
+        for (Integer i:positionInAnother) {
+            addElement(another.get(i));
+        }
+    }
 
 }
