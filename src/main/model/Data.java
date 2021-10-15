@@ -61,7 +61,7 @@ public class Data {
     //          and also update numOfCol and numOfRow,
     //          Assume: first row is names of columns
     //         return false if files cannot be read successfully
-    Boolean importFile(String filePath) {
+    public Boolean importFile(String filePath) {
         File file = new File("data/" + filePath);
         int r = 0;
         int c = 0;
@@ -243,42 +243,42 @@ public class Data {
 
     //REQUIRES: valid column number (>=0 and < data.numOfColumn())
     //EFFECT: return a required column
-    Column getCol(int colNum) {
+    public Column getCol(int colNum) {
         return data.get(colNum);
     }
 
     //REQUIRES: a String name that exist in this.names
     //EFFECT: return the first occuring column with its column.name() == name
-    Column getCol(String name) {
+    public Column getCol(String name) {
         int colNum = names.indexOf(name);
         return getCol(colNum);
     }
 
     //REQUIRES: valid column number (>=0 and < data.numOfColumn())
     //EFFECT: return initials of datatype of that column
-    String getColType(Integer colNum) {
+    public String getColType(Integer colNum) {
         return getCol(colNum).getType();
     }
 
     //REQUIRES: valid column name (exist in this.names)
     //EFFECT: return initials of datatype of the first column which has the same name as name
-    String getColType(String name) {
+    public String getColType(String name) {
         int colNum = names.indexOf(name);
         return getColType(colNum);
     }
 
     //EFFECT: return number of columns of data
-    int getNumOfCol() {
+    public int getNumOfCol() {
         return numOfCol;
     }
 
     //EFFECT: return number of rows of data
-    int getNumOfRow() {
+    public int getNumOfRow() {
         return numOfRow;
     }
 
     //EFFECT: return column number of index
-    int getIndex() {
+    public int getIndex() {
         return index;
     }
 
@@ -290,5 +290,10 @@ public class Data {
     //EFFECT: return a list of names of columns in data
     public List<String> getNames() {
         return names;
+    }
+
+    //EFFECT: return true if Data is empty
+    public boolean isEmpty() {
+        return (numOfCol == 0 && numOfRow == 0);
     }
 }

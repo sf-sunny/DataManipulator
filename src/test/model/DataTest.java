@@ -292,5 +292,11 @@ class DataTest {
         assertEquals(d.getNumOfCol(),4);
     }
 
+    @Test
+    void isEmptyTest() {
+        assertFalse(d.isEmpty());
+        Data d1 = new Data();
+        assertTrue(d1.isEmpty());
+    }
 
 }
