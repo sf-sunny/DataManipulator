@@ -54,6 +54,8 @@ public class Data {
 
 
 
+    //REQUIRES: csv files has unique elements on first row
+    //          (i.e. their column names are unique)
     //MODIFIES: this
     //EFFECTS: return true if:
     //          files can be read successfully,
