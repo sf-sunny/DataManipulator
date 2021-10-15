@@ -294,7 +294,7 @@ public class Data {
 
     //EFFECT: return true if Data is empty
     public boolean isEmpty() {
-        if (numOfCol == 0 && numOfRow == 0) {
+        if (getNumOfCol() == 0 && getNumOfRow() == 0) {
             return true;
         } else {
             return false;

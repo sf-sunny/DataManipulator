@@ -300,6 +300,9 @@ class DataTest {
         assertFalse(d.isEmpty());
         Data d1 = new Data();
         assertTrue(d1.isEmpty());
+        Column col = new Column();
+        d1.addCol(col);
+        assertFalse(d1.isEmpty());
     }
 
     @Test
