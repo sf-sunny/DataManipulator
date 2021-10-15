@@ -5,9 +5,11 @@ This application helps users who want to manipulate data to do so.
 
 ## User Stories
 ### Some *functions* that user could do:
-- *import* csv files and save as Data class
+- *import* csv files and save as Data class \**
 - *specify* data types of each columns in the csv files
 - do *arithmetics (+,-,\*,/)* on columns
 - *concatenate* csv files
 - *add* Column(s) to Data
 - *add* new entry (row) to Data
+
+**: users can import files under *./data*

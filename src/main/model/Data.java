@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.io.File;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Data {
     //field
@@ -14,6 +13,7 @@ public class Data {
     private Integer numOfRow;
     private List<String> names;
     private Integer index; //-1 means index has not been set
+    private static final String UTF8_BOM = "\uFEFF";
 
     public Data() {
         data = new LinkedList<>();
@@ -32,15 +32,15 @@ public class Data {
     }
 
     //NOT
-    //REUQIRES: 0 < i < numOfCol
+    //REUQIRES: a column exist in data.column
     //MODIFIES: this
-    //EFFECTS: if all elements in getCol(i) are unique,
-    //         set this.index = i,
+    //EFFECTS: if all elements in col are unique,
+    //         set this.index = names.indexOf(col.getName())
     //          and return true,
     //          otherwise return false
-    public boolean setIndex(Integer i){
-        if (getCol(i).checkUnique()) {
-            index = i;
+    public boolean setIndex(Column col) {
+        if (col.checkUnique()) {
+            index = names.indexOf(col.getName());
             return true;
         }
         return false;
@@ -66,50 +66,49 @@ public class Data {
     //         return false if files cannot be read successfully
     @SuppressWarnings("methodlength")
     Boolean importFile(String filePath) {
-        File file = new File("filePath");
+        File file = new File("data/" + filePath);
         int r = 0;
         int c = 0;
-        if (file.isFile() && file.canRead()) {
-            Scanner fileScanner = null;
-            try {
-                fileScanner = new Scanner(file);
-            } catch (FileNotFoundException e) {
-                return false;
-            }
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                Scanner lineScanner = new Scanner(line);
-                lineScanner.useDelimiter(",");
-                c = scanItemsInLine(lineScanner, r);
-                lineScanner.close();
-                r++;
-            }
-            fileScanner.close();
-            numOfCol = c;
-            numOfRow = r;
-            return true;
+ //       if (file.isFile() && file.canRead()) {
+        Scanner fileScanner;
+        try {
+            fileScanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            return false;
         }
-        return false;
+        while (fileScanner.hasNextLine()) {
+            String line = fileScanner.nextLine();
+            Scanner lineScanner = new Scanner(line);
+            lineScanner.useDelimiter(",");
+            c = scanItemsInLine(lineScanner, r);
+            lineScanner.close();
+            r++;
+        }
+        fileScanner.close();
+        numOfCol = c;
+        numOfRow = r - 1;
+        return true;
     }
 
-    private int scanItemsInLine(Scanner lineScanner, int r){
+    private int scanItemsInLine(Scanner lineScanner, int r) {
         int c = 0;
         while (lineScanner.hasNext()) {
             String item = lineScanner.next();
-            if ( r == 0 ) {
-                names.add(item);
-            } else if (r == 1) {
+            if (item.startsWith(UTF8_BOM)) {
+                item = item.substring(1);
+            }
+            if (r == 0) {
                 Column col = new Column();
-                col.renameCol(names.get(c));
-                col.add(item);
+                col.renameCol(item);
                 addCol(col);
             } else {
-                getCol(c).add(item);
+                getCol(c).addElement(item);
             }
             c++;
         }
         return c;
     }
+
 
     //REQUIRES: a string with length == numOfColumn and it only consist of valid datatype initials
     //MODIFIES: this
@@ -125,8 +124,8 @@ public class Data {
     //         and specify every elements according to corresponding column's datatype
     void addRow(List<Object> list) {
         int i = 0;
-        for (Column col:data){
-            col.add(list.get(i));
+        for (Column col:data) {
+            col.addElement(list.get(i));
             i++;
         }
         numOfRow++;
@@ -136,7 +135,7 @@ public class Data {
     //REQUIRES: a String name that exist in this.names
     //EFFECT: remove the first occurring column with its column.name() == name
     void removeRow(int i) {
-        for (Column col:data){
+        for (Column col:data) {
             col.remove(i);
         }
         numOfRow--;
@@ -174,17 +173,26 @@ public class Data {
     //EFFECT: add columns of another Data into data
     void public Boolean concatenate(Data another) {
         if (getCol(index).checkEqualsUnique(another.getCol(another.getIndex()))) {
-            for (Column col:another.getData()) {
-                Column newCol = new Column(col.getName(),new LinkedList<>(), col.getType());
-                for (Object o:getCol(this.index).getColAsList()) {
-                    int i = col.get(another.getIndex()).getIndexByObject(o);
-                    newCol.add(col)
-                }
-                addCol(newCol);
+            list<int> positionInAnother =
+            int tmp = 0;
+            for (Column col:another.getData()) { //loop through columns in another
+                if (tmp != another.getIndex()) {
 
+                    Column newCol = new Column(col.getName(), new LinkedList<>(), col.getType());
+
+                    for (Object o : getCol(this.index).getColAsList()) {
+                        int i = col.get(another.getIndex()).getIndexByObject(o);
+                        newCol.add(col)
+                    }
+                    addCol(newCol);
+                }
             }
         }
         return false;
+
+    }
+
+    void private List<int> checkPositionInAnother() {
 
     }
 
@@ -197,11 +205,17 @@ public class Data {
 
     //REQUIRES: a Column object which has the length == numOfRow
     //MODIFIES: this
-    //EFFECT: add a Column object to data
+    //EFFECT: if a col.name is in data.names, replace that column in data by col
+    //          else, add a Column object to data.
     void addCol(Column col) {
-        data.add(col);
-        names.add(col.getName());
-        numOfCol++;
+        if (names.contains(col.getName())) {
+            int i = names.indexOf(col.getName());
+            data.set(i, col);
+        } else {
+            data.add(col);
+            names.add(col.getName());
+            numOfCol++;
+        }
     }
 
     //NOT TESTED
@@ -219,7 +233,7 @@ public class Data {
         numOfCol--;
     }
 
-    //NOT TESTED
+
     //REQUIRES: a String name that exist in this.names
     //EFFECT: remove the first occurring column with its column.name() == name
     void removeCol(String name) {
@@ -233,7 +247,6 @@ public class Data {
         return data.get(colNum);
     }
 
-    //NOT TESTED
     //REQUIRES: a String name that exist in this.names
     //EFFECT: return the first occuring column with its column.name() == name
     Column getCol(String name) {

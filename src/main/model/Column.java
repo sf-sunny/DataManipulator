@@ -21,7 +21,7 @@ public class Column {
     }
 
     //REQUIRES: non-empty string on name,
-    //          Apparent type of elemnts in List has be be Object
+    //          Apparent type of elemnts in List has be Object
     //          string type has to be a valid datatype initials
     //          ("i" = Integer, "d" = Double, "s" = String, "o" = Object),
     //          and the datatype should match the actual data in Column
@@ -35,7 +35,7 @@ public class Column {
         specifyType(type);
     }
 
-    //NOT TESTED
+    //REQUIRES: column.type != d or column.type != o
     //MODIFIES: this
     //EFFECTS: if all elements in column are unique, return true,
     //          otherwise return false
@@ -57,24 +57,6 @@ public class Column {
     //MODIFIES: this
     //EFFECTS: change the actual type of all elements in column
     public void specifyType(String colType) {
-//        if (colType == "i") {
-//            type = "i";
-//            for (int i = 0; i < size; i++) {
-//                specify(i, colType);
-//            }
-//        } else if (colType == "d") {
-//            type = "d";
-//            for (int i = 0; i < size; i++) {
-//                column.set(i, Double.valueOf(column.get(i).toString()));
-//            }
-//        } else if (colType == "s") {
-//            type = "s";
-//            for (int i = 0; i < size; i++) {
-//                column.set(i, column.get(i).toString());
-//            }
-//        } else if (colType == "o") {
-//            type = "o";
-//        }
         type = colType;
         for (int i = 0; i < size; i++) {
             specify(i, colType);
@@ -119,26 +101,26 @@ public class Column {
     //REQUIRES: a list whose elements have same type as elements in this.column
     //MODIFIES: this
     //EFFECTS: append this.column with col, with all elements casted as column.type
-    // type?????
     public void appendCol(Column col) {
         column.addAll(col.getColAsList());
         this.specifyType(type);
         size += col.getSize();
     }
 
-    //NOT TESTED
-    //REQUIRES: index < this.size()
+
+    //REQUIRES: 0 < index < this.size()
     //MODIFIES: this
-    //EFFECTS: remove the element at column[index]
+    //EFFECTS: remove the element at column[index], this.size--
     public void remove(int index) {
         column.remove(index);
+        size--;
     }
 
     //NOT TESTED
     //REQUIRES: Object whose Actual type should be compatible with this.type
     //MODIFIES: this
     //EFFECTS: add the element to the end of column and cast its type to this.type
-    public void add(Object o) {
+    public void addElement(Object o) {
         column.add(o);
         specify(getSize(), getType());
         size++;
@@ -220,10 +202,10 @@ public class Column {
 
     //REQUIRES: this.column and another column has same length, and they are divisible (either Integer or Double),
     //            resultant quotient of elements of this.column divided by elements of another column,
-    //            results are within the range of double,
-    //            and another column should not contain any 0 element
+    //            results are within the range of double
     //EFFECTS: return a Column with quotients, stored as Double,
     //          of elements of this.column divided by elements of another column.
+    //          Note that the effect of dividing by 0 is the same as applying "/" operator to float number
     public Column divideDouble(Column another) {
         List<Object> anotherList = another.getColAsList();
         List<Object> finalList = new LinkedList<>();
@@ -259,24 +241,31 @@ public class Column {
         return name;
     }
 
+    //EFFECTS: return initial of datatype of column
     public String getType() {
         return type;
     }
 
+    //EFFECTS: return size of column
     public Integer getSize() {
         return size;
     }
 
+    //REQUIRES: 0 < index < this.size()
+    //EFFECTS: return column.get(index)
     public Object get(int index) {
         Object o = column.get(index);
         return o;
     }
 
+    //REQUIRES: Object o exist in this.column
+    //EFFECTS: return the index of o (first occurrance)
     public Integer getIndexByObject(Object o) {
         return column.indexOf(o);
     }
 
-    public List<Object> getColAsList() {
+    //EFFECTS: return  this.column
+    private List<Object> getColAsList() {
         List<Object> l = new LinkedList<>();
         l.addAll(column);
         return l;
@@ -288,4 +277,6 @@ public class Column {
     public Boolean checkIfArithmetic() {
         return ((type == "i") || (type == "d"));
     }
+
+
 }

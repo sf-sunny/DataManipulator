@@ -31,11 +31,28 @@ public class ColumnTest {
         listS.add("Dsef");
         colI = new Column("colI", listI, "i");
         colD = new Column("colD", listD, "d");
-        colS = new Column("colS", listI, "s");
+        colS = new Column("colS", listS, "s");
 
         colI.specifyType("i");
         colD.specifyType("d");
         colS.specifyType("s");
+    }
+
+    @Test
+    void checkUnique() {
+        assertTrue(colS.checkUnique());
+
+        colS.addElement("b");
+        colS.checkUnique();
+        assertFalse(colS.checkUnique());
+
+        List<Object> list = new LinkedList<>();
+        list.add(7);
+        list.add(9);
+        list.add(7);
+        list.add(-9);
+        Column col = new Column("test", list, "i");
+        assertFalse(col.checkUnique());
     }
 
     //specify
@@ -88,6 +105,28 @@ public class ColumnTest {
         Column col2 = new Column("col2", new LinkedList<>(), "i");
         col2.appendCol(col1);
         assertEquals(col2.getSize(), list1.size());
+    }
+
+    @Test
+    void removeTest() {
+        colS.remove(0);
+        assertEquals(colS.getSize(), 3);
+        assertEquals(colS.get(0), "b");
+
+        colI.remove(colI.getSize()-1);
+        assertEquals(colI.getSize(), 3);
+        assertEquals(colI.get(colI.getSize()-1), 9);
+    }
+    @Test
+    void addElementTest() {
+        colS.addElement("5");
+        assertEquals(colS.getSize(), 5);
+        assertEquals(colS.get(4), "5");
+
+        colI.addElement(9249);
+        assertEquals(colI.getSize(), 5);
+        assertEquals(colI.get(colI.getSize()-1), 9249);
+
     }
 
     //add
@@ -236,6 +275,7 @@ public class ColumnTest {
     boolean checkPrecision(double a, double b) {
         return (Math.abs(a-b) / a < 0.00001);
     }
+
     //divide
     @Test
     void divideDoubleTestSame() {
@@ -287,6 +327,25 @@ public class ColumnTest {
         assertEquals( sum.getName(), "colI/col2");
     }
 
+    @Test
+    void checkEqualUnique() {
+        List<Object> list = new LinkedList<>();
+        list.add("b");
+        list.add("Cc");
+        list.add("A");
+        list.add("Dsef");
+        Column col2 = new Column();
+        col2.listAsCol(list);
+        col2.specifyType("s");
+        col2.renameCol("col2");
+
+        assertTrue(col2.checkEqualsUnique(colS));
+
+        col2.addElement("lmao");
+        assertFalse(col2.checkEqualsUnique(colS));
+    }
+
+
     //getName
     @Test
     void getNameTest() {
@@ -305,6 +364,15 @@ public class ColumnTest {
     }
 
     @Test
+    void getIndexByObjectTest() {
+        assertEquals(colS.getIndexByObject(colS.get(2)), 2);
+        colS.addElement("Cc");
+        assertEquals(colS.getIndexByObject(colS.get(2)), 2);
+        colS.remove(2);
+        assertEquals(colS.getIndexByObject("Cc"), 3);
+    }
+
+    @Test
     void checkIfArithmeticTest() {
         assertTrue(colI.checkIfArithmetic());
         assertTrue(colD.checkIfArithmetic());
@@ -312,4 +380,6 @@ public class ColumnTest {
         Column col1 = new Column("col1", new ArrayList<>(), "o");
         assertFalse(col1.checkIfArithmetic());
     }
+
+
 }
