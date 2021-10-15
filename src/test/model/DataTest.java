@@ -74,6 +74,15 @@ class DataTest {
     }
 
     //arithmetics
+
+    @Test
+    void arithmeticsTestInvalidOp() {
+        d.arithmetics(d.getCol(2),"++", d.getCol(2));
+        d.arithmetics(d.getCol(2),"+-", d.getCol(3));
+
+        assertEquals(d.getNumOfCol(), 4);
+        assertEquals(d.getNumOfRow(), 5);
+    }
     @Test
     void arithmeticsTestAdd() {
         d.arithmetics(d.getCol(2),"+", d.getCol(2));

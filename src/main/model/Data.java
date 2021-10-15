@@ -153,9 +153,9 @@ public class Data {
 
     //REQUIRES: two columns with their types belongs to Number, and a valid operator(op) (+ or - or * or /)
     //MODIFIES: this
-    //EFFECT: add resulting columns into data
+    //EFFECT: add resulting columns into data if operator is valid, else do nothing
     void arithmetics(Column col1, String op, Column col2) {
-        Column result = new Column();
+        Column result;
         if (op.equals("+")) {
             result = col1.add(col2);
         } else if (op.equals("-")) {
@@ -164,6 +164,8 @@ public class Data {
             result = col1.multiply(col2);
         } else if (op.equals("/")) {
             result = col1.divideDouble(col2);
+        } else {
+            return;
         }
         addCol(result);
     }
