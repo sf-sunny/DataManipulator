@@ -13,5 +13,7 @@ This application helps users who want to manipulate data to do so.
 - *add/remove* Column(s) to Data
 - *add/remove* new entry (row) to Data
 - *view* Data
+- *save* Data as .json **
+- *load* Data by .json **
 
-**: users can import files under *./data*
+**: users can import/load/save files under *./data*
