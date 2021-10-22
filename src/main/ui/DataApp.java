@@ -15,12 +15,14 @@ public class DataApp {
     private Scanner input;
 
     //EFFECTS: run the Data Manipulator Application
+    //Reference source: TellerApp: https://github.students.cs.ubc.ca/CPSC210/TellerApp
     public DataApp() {
         runDataApp();
     }
 
     // MODIFIES: this
     // EFFECTS: processes user input
+    //Reference source: TellerApp: https://github.students.cs.ubc.ca/CPSC210/TellerApp
     private void runDataApp() {
         boolean keepGoing = true;
         String command = null;
@@ -44,9 +46,12 @@ public class DataApp {
 
     // MODIFIES: this
     // EFFECTS: processes user command
+    //Reference source: TellerApp: https://github.students.cs.ubc.ca/CPSC210/TellerApp
     private void processCommand(String command) {
         if (command.equals("i")) {
-            doImport(data);
+            Data d = new Data();
+            doImport(d);
+            data = d;
         } else if (command.equals("dt") && !data.isEmpty()) {
             doSpecifyDataTypes();
         } else if (command.equals("ind") && !data.isEmpty()) {
@@ -82,6 +87,7 @@ public class DataApp {
     }
 
     // EFFECTS: displays menu of options to user
+    //Reference source: TellerApp: https://github.students.cs.ubc.ca/CPSC210/TellerApp
     private void displayMenu() {
         System.out.println("\nSelect from:");
         System.out.println("\ti -> import csv files (under ./data/)");
@@ -95,7 +101,7 @@ public class DataApp {
         System.out.println("\tq -> quit");
     }
 
-    // EFFECTS: import csv files under ./data/ to Data
+    // EFFECTS: import csv files under ./data/ to Data d
     private void doImport(Data d) {
         String fileName = "";
 
