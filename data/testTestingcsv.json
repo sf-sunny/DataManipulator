@@ -1,0 +1,61 @@
+{
+    "numOfCol": 4,
+    "names": [
+        "Name",
+        "CSID",
+        "Age",
+        "Height"
+    ],
+    "Columns": [
+        {
+            "size": 5,
+            "Column": [
+                "Sam",
+                "Ada",
+                "Sunny",
+                "Jacky",
+                "Wai"
+            ],
+            "name": "Name",
+            "type": "s"
+        },
+        {
+            "size": 5,
+            "Column": [
+                "s1s2t",
+                "a8a0o",
+                "s9h8k",
+                "j1on9",
+                "haha9"
+            ],
+            "name": "CSID",
+            "type": "o"
+        },
+        {
+            "size": 5,
+            "Column": [
+                17,
+                20,
+                21,
+                27,
+                18
+            ],
+            "name": "Age",
+            "type": "i"
+        },
+        {
+            "size": 5,
+            "Column": [
+                160,
+                163.1,
+                170,
+                -169.9,
+                162.3
+            ],
+            "name": "Height",
+            "type": "d"
+        }
+    ],
+    "index": 0,
+    "numOfRow": 5
+}

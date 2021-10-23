@@ -1,11 +1,16 @@
 package model;
 
+import org.json.JSONObject;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Column {
+import persistence.Writable;
+
+// Represents a column from a .csv file
+public class Column implements Writable {
     private List<Object> column;
     private String name;
     private String type;
@@ -301,4 +306,24 @@ public class Column {
         return getColAsList().contains(o);
     }
 
+
+//    private List<Object> column;
+//    private String name;
+//    private String type;
+//    //type can be "i" = Integer, "d" = Double, "s" = String, "o" = Object(unspecified/default)
+//    private Integer size;
+    // EFFECTS: returns Column as a JSON object
+    // reference: JsonSerializationDemo
+    //            https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("Column", getColAsList());
+        json.put("name", getName());
+        json.put("type", getType());
+
+        //JSONObject namesInJson = new JSONObject();
+        json.put("size", getSize());
+        return json;
+    }
 }

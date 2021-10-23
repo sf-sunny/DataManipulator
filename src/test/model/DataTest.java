@@ -21,6 +21,8 @@ class DataTest {
         d.specifyColType(d.getCol(3), "d");
     }
 
+
+
     //importFile
     @Test
     void importFileTest() {
@@ -333,5 +335,6 @@ class DataTest {
 
         assertFalse(d.checkIfAnyArithmetics());
     }
+
 
 }

@@ -1,12 +1,18 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 import java.io.File;
 import java.util.Scanner;
 
-public class Data {
+import persistence.Writable;
+
+// Represents the whole .csv file, which its columns stored as Class Column
+public class Data implements Writable {
     //field
     private List<Column> data;
     private Integer numOfCol;
@@ -219,6 +225,9 @@ public class Data {
             names.add(col.getName());
             numOfCol++;
         }
+        if (getNumOfRow() == 0) {
+            numOfRow = col.getSize();
+        }
     }
 
     //REQUIRES: 0 <= colNum < numOfCol
@@ -313,5 +322,37 @@ public class Data {
         return false;
     }
 
+//    private List<Column> data;
+//    private Integer numOfCol;
+//    private Integer numOfRow;
+//    private List<String> names;
+//    private Integer index;
+    // EFFECTS: returns Data as a JSON Object
+    // reference: JsonSerializationDemo
+    //            https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("Columns", colToJson());
+        json.put("numOfCol", getNumOfCol());
+        json.put("numOfRow", getNumOfRow());
+        //JSONObject namesInJson = new JSONObject();
+        json.put("names", getNames());
+        json.put("index", getIndex());
+        return json;
+    }
+
+    // EFFECTS: returns Column in Data as a JSON array
+    // reference: JsonSerializationDemo
+    //            https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    private JSONArray colToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Column c : data) {
+            jsonArray.put(c.toJson());
+        }
+
+        return jsonArray;
+    }
 
 }
