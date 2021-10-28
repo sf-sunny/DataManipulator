@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import model.*;
 
-// Represents a reader that reads workroom from JSON data stored in file
+// Represents a reader that reads Data from JSON data stored in file
 // reference: JsonSerializationDemo
 //            https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonReader {
@@ -24,7 +24,7 @@ public class JsonReader {
         this.source = source;
     }
 
-    // EFFECTS: reads workroom from file and returns it;
+    // EFFECTS: reads Data from file and returns it;
     // throws IOException if an error occurs reading data from file
     public Data read() throws IOException {
         String jsonData = readFile(source);
@@ -43,32 +43,34 @@ public class JsonReader {
         return contentBuilder.toString();
     }
 
-    // EFFECTS: parses workroom from JSON object and returns it
+    // EFFECTS: parses Data from JSON object and returns it
     private Data parseData(JSONObject jsonObject) {
         Data d = new Data();
         addColumns(d, jsonObject);
         int index = jsonObject.getInt("index");
-        d.setIndex(d.getCol(index));
+        if (index != -1) {
+            d.setIndex(d.getCol(index));
+        }
         return d;
     }
 
-    // MODIFIES: wr
-    // EFFECTS: parses thingies from JSON object and adds them to workroom
+    // MODIFIES: d
+    // EFFECTS: parses Columns from JSON object and adds them to Data d
     private void addColumns(Data d, JSONObject jsonObject) {
-        JSONArray jsonArray = jsonObject.getJSONArray("Columns");
+        JSONArray jsonArray = jsonObject.getJSONArray("data");
         for (Object json : jsonArray) {
             JSONObject nextCol = (JSONObject) json;
             addColumn(d, nextCol);
         }
     }
 
-    // MODIFIES: wr
-    // EFFECTS: parses thingy from JSON object and adds it to workroom
+    // MODIFIES: d
+    // EFFECTS: parses Column from JSON object and adds it to d
     private void addColumn(Data d, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
 
         List<Object> list = new LinkedList<>();
-        JSONArray jsonArray = jsonObject.getJSONArray("Column");
+        JSONArray jsonArray = jsonObject.getJSONArray("column");
         for (Object json : jsonArray) {
             list.add(json);
         }

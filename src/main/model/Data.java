@@ -11,7 +11,9 @@ import java.util.Scanner;
 
 import persistence.Writable;
 
-// Represents the whole .csv file, which its columns stored as Class Column
+// Represents the whole .csv file, which its columns stored as data
+//      index is for indicating the whole column has no duplicate entry
+//      and can be used for concatenating different Data by having the same column
 public class Data implements Writable {
     //field
     private List<Column> data;
@@ -298,13 +300,17 @@ public class Data implements Writable {
     }
 
     //EFFECT: return a list of columns of data
-    private List<Column> getData() {
-        return data;
+    public List<Column> getData() {
+        List<Column> list = new LinkedList<>();
+        list.addAll(data);
+        return list;
     }
 
     //EFFECT: return a list of names of columns in data
     public List<String> getNames() {
-        return names;
+        List<String> list = new LinkedList<>();
+        list.addAll(names);
+        return list;
     }
 
     //EFFECT: return true if Data is empty
@@ -333,7 +339,7 @@ public class Data implements Writable {
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("Columns", colToJson());
+        json.put("data", colToJson());
         json.put("numOfCol", getNumOfCol());
         json.put("numOfRow", getNumOfRow());
         //JSONObject namesInJson = new JSONObject();

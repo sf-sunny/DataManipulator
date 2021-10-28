@@ -307,18 +307,13 @@ public class Column implements Writable {
     }
 
 
-//    private List<Object> column;
-//    private String name;
-//    private String type;
-//    //type can be "i" = Integer, "d" = Double, "s" = String, "o" = Object(unspecified/default)
-//    private Integer size;
     // EFFECTS: returns Column as a JSON object
     // reference: JsonSerializationDemo
     //            https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
-        json.put("Column", getColAsList());
+        json.put("column", getColAsList());
         json.put("name", getName());
         json.put("type", getType());
 

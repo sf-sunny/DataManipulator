@@ -2,13 +2,17 @@ package ui;
 
 import model.Data;
 import model.Column;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.IOException;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+//Represents a console application of Data Manipulator
 public class DataApp {
     private Data data;
     private Data dataToBeConcat;
@@ -66,6 +70,17 @@ public class DataApp {
             doRow();
         } else if (command.equals("v") && !data.isEmpty()) {
             doView();
+        } else {
+            processCommandTwo(command);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: further processes user command
+    //Reference source: TellerApp: https://github.students.cs.ubc.ca/CPSC210/TellerApp
+    private void processCommandTwo(String command) {
+        if (command.equals("json")) {
+            doJson();
         } else if (data.isEmpty()) {
             System.out.print("Data is Empty. Please import file first.\n");
         } else {
@@ -91,6 +106,7 @@ public class DataApp {
     private void displayMenu() {
         System.out.println("\nSelect from:");
         System.out.println("\ti -> import csv files (under ./data/)");
+        System.out.println("\tjson -> save/import files in .json format");
         System.out.println("\tdt -> specify data types of Columns");
         System.out.println("\tind -> specify Index column");
         System.out.println("\ta -> do arithmetics (+,-,*,/)");
@@ -100,6 +116,62 @@ public class DataApp {
         System.out.println("\tv -> view Data");
         System.out.println("\tq -> quit");
     }
+
+    // EFFECTS: save/load Data in JSON
+    private void doJson() {
+        String selection = "";
+        while (!selection.equals("l") && !(selection.equals("s"))) {
+            System.out.println("Choose :");
+            System.out.println("l -> load Data as .json");
+            System.out.println("s -> save Data as .json");
+            selection = input.next();
+        }
+
+        if (selection.equals("l")) {
+            loadJson();
+        } else if (selection.equals("s")) {
+            saveJson();
+        }
+    }
+
+    // EFFECTS: load .json files under ./data/ to this.data
+    private void loadJson() {
+        String fileName = "";
+
+        System.out.print("Enter file name (include .json) under ./data/ to import: ");
+        fileName = input.next();
+
+        try {
+            JsonReader reader = new JsonReader("./data/" + fileName);
+            Data d = reader.read();
+            this.data.copyFromData(d);
+            System.out.print(fileName + " has been loaded successfully.\n");
+        } catch (IOException e) {
+            System.out.print("Load .json file Unsuccessful. "
+                    + "Please check if there is any typo/the file exists/is readable.\n");
+        }
+    }
+
+    // EFFECTS: save this.ata as .json files under ./data/
+    private void saveJson() {
+        String fileName = "";
+
+        System.out.print("Enter the file name (include .json) under ./data/ to be saved: ");
+        fileName = input.next();
+
+        try {
+            JsonWriter writer = new JsonWriter("./data/" + fileName);
+            writer.open();
+            writer.write(data);
+            writer.close();
+            System.out.print(fileName + " has been saved successfully.\n");
+        } catch (IOException e) {
+            System.out.print("save .json file Unsuccessful. "
+                    + "Please check if there is any typo.\n");
+        }
+    }
+
+
 
     // EFFECTS: import csv files under ./data/ to Data d
     private void doImport(Data d) {

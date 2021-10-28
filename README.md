@@ -16,4 +16,4 @@ This application helps users who want to manipulate data to do so.
 - *save* Data as .json **
 - *load* Data by .json **
 
-**: users can import/load/save files under *./data*
+**: users can import/load/save files under *./data/*
