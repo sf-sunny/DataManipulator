@@ -21,7 +21,7 @@ public class DataUI extends JFrame {
     private JComboBox<String> printCombo;
     private JDesktopPane desktop;
     private JInternalFrame controlPanel;
-    private List<Column> columnAdded;
+    private List<Column> columnAdded; // to be changed as a part of Data...
 
     /**
      * Constructor sets up button panel.
@@ -69,9 +69,10 @@ public class DataUI extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(2,1));
         buttonPanel.add(new JButton(new ColumnAction())); //add new column
+        buttonPanel.add(new JButton(new SpecifyTypeAction())); //specify data type
         buttonPanel.add(new JButton(new PrintDataAction())); //view ALL or only ADDED
         buttonPanel.add(createPrintCombo());
-        //buttonPanel.add(new JButton(new SpecifyTypeAction())); //specify data type
+
 
         controlPanel.add(buttonPanel, BorderLayout.WEST);
     }
@@ -102,11 +103,11 @@ public class DataUI extends JFrame {
 
     /**
      * Represents the action to be taken when the user wants to
-     * print the Data.
+     * print the Data/newly added columns.
      */
     private class PrintDataAction extends AbstractAction {
         PrintDataAction() {
-            super("Print log to...");
+            super("Print Data/Newly Added Columns?");
         }
 
         @Override
@@ -124,6 +125,51 @@ public class DataUI extends JFrame {
         }
 
     }
+
+    /**
+     * Represents the action to be taken when the user wants to
+     * specify data type of each columns
+     */
+    private class SpecifyTypeAction extends AbstractAction {
+        SpecifyTypeAction() {
+            super("Specify data types of Columns");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            JPanel specifyPanel = new JPanel();
+            specifyPanel.setLayout(new GridLayout(2,1));
+
+            String[] colNames = convertNamesToString();
+            JComboBox colBox = new JComboBox(colNames);
+
+            String[] dataTypesChoices = {"i: Integer", "d: Double", "s: String", "o: Object"};
+            JComboBox dataTypeBox = new JComboBox(dataTypesChoices);
+
+            specifyPanel.add(new JLabel("Select Column:"));
+            specifyPanel.add(colBox);
+            specifyPanel.add(new JLabel("Select data type to specify:"));
+            specifyPanel.add(dataTypeBox);
+
+            String message = "Choose a Column to specify its data type:";
+            int result = JOptionPane.showConfirmDialog(null, specifyPanel,
+                    message, JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                String[] dataTypes = {"i", "d", "s", "o"};
+                data.specifyColType(data.getCol(colBox.getSelectedIndex()), dataTypes[dataTypeBox.getSelectedIndex()]);
+            }
+        }
+
+        private String[] convertNamesToString() {
+            String[] s = new String[data.getNumOfCol()];
+            for (int i = 0; i < data.getNumOfCol(); i++) {
+                s[i] = i + ": " + data.getNames().get(i);
+            }
+            return s;
+        }
+
+    }
+
 
     /**
      * Helper to create print options combo box

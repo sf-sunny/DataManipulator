@@ -22,7 +22,7 @@ public class ScreenPrinter extends JInternalFrame {
      * @param parent the parent component
      */
     public ScreenPrinter(Component parent) {
-        super("Columns", false, true, false, false);
+        super("Columns", true, true, false, false);
         textArea = new JTextArea();
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
@@ -33,8 +33,26 @@ public class ScreenPrinter extends JInternalFrame {
     }
 
     public void printData(Data data) {
-        //printDataInfo();
+        printDataInfo(data);
         printColumns(data.getData());
+    }
+
+    public void printDataInfo(Data data) {
+        String indexColInfo = "";
+        if (data.getIndex() == -1) {
+            indexColInfo = "\nIndex Column: None";
+        } else {
+            indexColInfo = "\nIndex: " + data.getCol(data.getIndex()).getName()
+                    + " with Column Number: " + data.getIndex();
+        }
+        textArea.setText(textArea.getText() + indexColInfo
+                + "\nColumn Name, Data Type (i: int, d: double, s: string, o: object (default)\n");
+        for (int i = 0; i < data.getNumOfCol(); i++) {
+            textArea.setText(textArea.getText() + data.getCol(i).getName() + "," + data.getCol(i).getType() + "\n");
+        }
+        textArea.setText(textArea.getText() + "Data Total Size (row x col): " + data.getNumOfRow()
+                + " x " + data.getNumOfCol() + "\n\n");
+
     }
 
     public void printColumns(List<Column> list) {
@@ -52,6 +70,7 @@ public class ScreenPrinter extends JInternalFrame {
         }
         repaint();
     }
+
     /**
      * Sets the position of window in which log will be printed relative to
      * parent
