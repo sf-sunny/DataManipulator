@@ -3,6 +3,7 @@ package ui;
 import model.Column;
 import model.Data;
 import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +46,8 @@ public class DataUI extends JFrame {
         setSize(WIDTH, HEIGHT);
 
         addButtonPanel();
-        //addMenu(); save and load .json
+        addMenu(); //save and load .json
+
 
         controlPanel.pack();
         controlPanel.setVisible(true);
@@ -75,6 +77,127 @@ public class DataUI extends JFrame {
 
 
         controlPanel.add(buttonPanel, BorderLayout.WEST);
+    }
+
+    private void addMenu() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.setMnemonic('F');
+        addMenuItem(fileMenu, new SaveDataAction(),
+                KeyStroke.getKeyStroke("control S"));
+        addMenuItem(fileMenu, new LoadDataAction(),
+                KeyStroke.getKeyStroke("control O"));
+        menuBar.add(fileMenu);
+
+        setJMenuBar(menuBar);
+    }
+
+    /**
+     * Adds an item with given handler to the given menu
+     * @param theMenu  menu to which new item is added
+     * @param action   handler for new menu item
+     * @param accelerator    keystroke accelerator for this menu item
+     */
+    private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator) {
+        JMenuItem menuItem = new JMenuItem(action);
+        menuItem.setMnemonic(menuItem.getText().charAt(0));
+        menuItem.setAccelerator(accelerator);
+        theMenu.add(menuItem);
+    }
+
+    private class SaveDataAction extends AbstractAction {
+        SaveDataAction() {
+            super("Save Data As .json");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            String fileName = JOptionPane.showInputDialog(null, "Save As...",
+                    "Enter the file name (include .json) under ./data/ to be saved: ", JOptionPane.QUESTION_MESSAGE);
+
+            if (fileName != null) {
+                try {
+                    JsonWriter writer = new JsonWriter("./data/" + fileName);
+                    writer.open();
+                    writer.write(data);
+                    writer.close();
+                    JOptionPane.showMessageDialog(null, fileName + " has been saved successfully.",
+                            "Successfully Saved.", JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null,"Save .json file Unsuccessful. "
+                            + "Please check if there is any typo.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    private JPanel newDataPanel(JTextField fileNameBox, JComboBox fileTypeBox) {
+        JPanel dataPanel = new JPanel();
+        dataPanel.setLayout(new GridLayout(2,2));
+        String[] fileTypesChoices = {".json",".csv"};
+        fileTypeBox = new JComboBox(fileTypesChoices);
+        dataPanel.add(new JLabel("file name:"));
+        dataPanel.add(new JLabel());
+        dataPanel.add(fileNameBox);
+        dataPanel.add(fileTypeBox);
+        return dataPanel;
+    }
+
+    private class LoadDataAction extends AbstractAction {
+        LoadDataAction() {
+            super("Load Data As..");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            JTextField fileNameBox = new JTextField();
+            String[] fileTypesChoices = {".json",".csv"};
+            JComboBox fileTypeBox = new JComboBox(fileTypesChoices);
+            JPanel loadPanel = new JPanel();
+            loadPanel.setLayout(new GridLayout(2,2));
+            loadPanel.add(new JLabel("file name:"));
+            loadPanel.add(new JLabel());
+            loadPanel.add(fileNameBox);
+            loadPanel.add(fileTypeBox);
+            int result = JOptionPane.showConfirmDialog(null, loadPanel,
+                    "Enter the file name under ./data/ to be imported: ", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                String fileName = fileNameBox.getText() + fileTypesChoices[fileTypeBox.getSelectedIndex()];
+                boolean performed = fileTypeBox.getSelectedIndex() == 0 ? loadJson(fileName) : loadCsv(fileName);
+                if (performed) {
+                    JOptionPane.showMessageDialog(null, fileName + " has been loaded successfully.",
+                            "Successfully Loaded.", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null,"Load file Unsuccessful."
+                                    + " Please check if there is any typo/the file exists/is readable.", "ERROR",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+
+        private boolean loadJson(String fileName) {
+            try {
+                JsonReader reader = new JsonReader("./data/" + fileName);
+                Data d = reader.read();
+                data.copyFromData(d);
+                columnAdded.clear();
+                return true;
+            } catch (IOException e) {
+                return false;
+            }
+        }
+
+        private boolean loadCsv(String fileName) {
+            Data d = new Data();
+            if (d.importFile(fileName)) {
+                data = new Data();
+                data.importFile(fileName);
+                columnAdded.clear();
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     private class ColumnAction extends AbstractAction {

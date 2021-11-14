@@ -56,6 +56,11 @@ public class ScreenPrinter extends JInternalFrame {
     }
 
     public void printColumns(List<Column> list) {
+        if (list.size() == 0) {
+            textArea.setText("No newly added Column(s).");
+            return;
+        }
+
         for (int i = -1; i < list.get(0).getSize(); i++) {
             String sep = "";
             for (Column col : list) {
