@@ -1,11 +1,12 @@
 {
-    "numOfCol": 4,
+    "numOfCol": 5,
     "initialNumOfCol": 4,
     "names": [
         "Name",
         "CSID",
         "Age",
-        "Height"
+        "Height",
+        "haha"
     ],
     "data": [
         {
@@ -47,6 +48,16 @@
             ],
             "name": "Height",
             "type": "d"
+        },
+        {
+            "size": 3,
+            "column": [
+                "1",
+                "2",
+                "3"
+            ],
+            "name": "haha",
+            "type": "o"
         }
     ],
     "index": 1,

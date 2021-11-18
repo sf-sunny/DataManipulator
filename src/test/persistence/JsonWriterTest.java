@@ -83,6 +83,9 @@ public class JsonWriterTest {
                 assertEquals(d1.getNumOfCol(),4);
             }
 
+            assertEquals(d.getInitialNumOfCol(), d1.getInitialNumOfCol());
+            assertEquals(4, d1.getInitialNumOfCol());
+
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }

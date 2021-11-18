@@ -22,6 +22,7 @@ public class Data implements Writable {
     private List<String> names;
     private Integer index; //-1 means index has not been set
     private static final String UTF8_BOM = "\uFEFF";
+    private Integer initialNumOfCol;
 
     //EFFECTS: create an empty Data with index = -1 (means index hasn't been assigned)
     public Data() {
@@ -29,6 +30,7 @@ public class Data implements Writable {
         names = new LinkedList<>();
         numOfCol = 0;
         numOfRow = 0;
+        initialNumOfCol = 0;
         index = -1;
     }
 
@@ -92,6 +94,7 @@ public class Data implements Writable {
         }
         fileScanner.close();
         numOfCol = c;
+        setInitialNumOfCol(c);
         numOfRow = r - 1;
         return true;
     }
@@ -340,6 +343,7 @@ public class Data implements Writable {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("data", colToJson());
+        json.put("initialNumOfCol", getInitialNumOfCol());
         json.put("numOfCol", getNumOfCol());
         json.put("numOfRow", getNumOfRow());
         //JSONObject namesInJson = new JSONObject();
@@ -359,6 +363,14 @@ public class Data implements Writable {
         }
 
         return jsonArray;
+    }
+
+    public void setInitialNumOfCol(int c) {
+        this.initialNumOfCol = c;
+    }
+
+    public int getInitialNumOfCol() {
+        return (this.initialNumOfCol);
     }
 
 }

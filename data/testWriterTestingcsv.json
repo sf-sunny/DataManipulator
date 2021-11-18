@@ -1,5 +1,6 @@
 {
     "numOfCol": 4,
+    "initialNumOfCol": 4,
     "names": [
         "Name",
         "CSID",

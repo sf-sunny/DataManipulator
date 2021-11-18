@@ -51,6 +51,7 @@ public class JsonReader {
         if (index != -1) {
             d.setIndex(d.getCol(index));
         }
+        d.setInitialNumOfCol(jsonObject.getInt("initialNumOfCol"));
         return d;
     }
 

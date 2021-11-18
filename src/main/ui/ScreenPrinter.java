@@ -5,6 +5,7 @@ import model.Data;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -34,7 +35,7 @@ public class ScreenPrinter extends JInternalFrame {
 
     public void printData(Data data) {
         printDataInfo(data);
-        printColumns(data.getData());
+        printColumns(data, true);
     }
 
     public void printDataInfo(Data data) {
@@ -55,7 +56,12 @@ public class ScreenPrinter extends JInternalFrame {
 
     }
 
-    public void printColumns(List<Column> list) {
+    public void printColumns(Data d, boolean whole) {
+        List<Column> list = new LinkedList<>();
+        for (int i = whole ? 0 : d.getInitialNumOfCol(); i < d.getNumOfCol(); i++) {
+            list.add(d.getCol(i));
+        }
+
         if (list.size() == 0) {
             textArea.setText("No newly added Column(s).");
             return;

@@ -284,7 +284,7 @@ public class DataUI extends JFrame {
             if (selected.equals("Whole Data")) {
                 sp.printData(data);
             } else if (selected.equals("Newly Added Columns")) {
-                sp.printColumns(columnAdded);
+                sp.printColumns(data, false);
             }
         }
 
