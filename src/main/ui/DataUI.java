@@ -8,6 +8,7 @@ import persistence.JsonWriter;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +28,8 @@ public class DataUI extends JFrame {
     /**
      * Constructor sets up button panel.
      */
-    public DataUI() {
+    public DataUI() throws InterruptedException {
+        showLogo();
         data = new Data();
         JsonReader reader = new JsonReader("./data/testReaderGeneralData.json");
         try {
@@ -48,14 +50,38 @@ public class DataUI extends JFrame {
         addButtonPanel();
         addMenu(); //save and load .json
 
-
         controlPanel.pack();
         controlPanel.setVisible(true);
         desktop.add(controlPanel);
-
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         centreOnScreen();
         setVisible(true);
+    }
+
+    private void showLogo() throws InterruptedException {
+        JFrame logoFrame = new JFrame();
+        logoFrame.setLayout(new BorderLayout());
+        logoFrame.setSize(300,250);
+        logoFrame.setAlwaysOnTop(true);
+        logoFrame.setUndecorated(true);
+        JPanel logoPanel = new JPanel();
+        JLabel logoLabel = new JLabel();
+        logoLabel.setIcon(new ImageIcon(new ImageIcon("./data/IMG_0017.jpg").getImage().getScaledInstance(
+                200, 200, Image.SCALE_DEFAULT)));
+        logoLabel.setText("Welcome to Sunny's Data Manipulator");
+        logoLabel.setHorizontalTextPosition(JLabel.CENTER);
+        logoLabel.setVerticalTextPosition(JLabel.BOTTOM);
+        logoPanel.add(logoLabel);
+        Timer timer = new Timer(5000, new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                logoFrame.dispose();
+            }
+        });
+        logoFrame.add(logoPanel);
+        centreOnScreen(logoFrame);
+        logoFrame.setVisible(true);
+        timer.start();
+        java.util.concurrent.TimeUnit.SECONDS.sleep(4);
     }
 
     /**
@@ -66,6 +92,13 @@ public class DataUI extends JFrame {
         int height = Toolkit.getDefaultToolkit().getScreenSize().height;
         setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
     }
+
+    private void centreOnScreen(JFrame frame) {
+        int width = Toolkit.getDefaultToolkit().getScreenSize().width;
+        int height = Toolkit.getDefaultToolkit().getScreenSize().height;
+        frame.setLocation((width - frame.getWidth()) / 2, (height - frame.getHeight()) / 2);
+    }
+
 
     private void addButtonPanel() {
         JPanel buttonPanel = new JPanel();
@@ -112,21 +145,35 @@ public class DataUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent evt) {
-            String fileName = JOptionPane.showInputDialog(null, "Save As...",
-                    "Enter the file name (include .json) under ./data/ to be saved: ", JOptionPane.QUESTION_MESSAGE);
+            JTextField fileNameBox = new JTextField();
+            String[] fileTypesChoices = {".json"};
+            JComboBox fileTypeBox = new JComboBox(fileTypesChoices);
+            JPanel loadPanel = newDataPanel(fileNameBox, fileTypeBox);
 
-            if (fileName != null) {
-                try {
-                    JsonWriter writer = new JsonWriter("./data/" + fileName);
-                    writer.open();
-                    writer.write(data);
-                    writer.close();
+            int result = JOptionPane.showConfirmDialog(null, loadPanel,
+                    "Enter the file name under ./data/ to be imported: ", JOptionPane.OK_CANCEL_OPTION);
+            if (result == JOptionPane.OK_OPTION) {
+                String fileName = fileNameBox.getText() + fileTypesChoices[fileTypeBox.getSelectedIndex()];
+                boolean performed = fileTypeBox.getSelectedIndex() == 0 ? saveJson(fileName) : false;
+                if (performed) {
                     JOptionPane.showMessageDialog(null, fileName + " has been saved successfully.",
                             "Successfully Saved.", JOptionPane.INFORMATION_MESSAGE);
-                } catch (IOException e) {
+                } else {
                     JOptionPane.showMessageDialog(null,"Save .json file Unsuccessful. "
                             + "Please check if there is any typo.", "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        }
+
+        private boolean saveJson(String fileName) {
+            try {
+                JsonWriter writer = new JsonWriter("./data/" + fileName);
+                writer.open();
+                writer.write(data);
+                writer.close();
+                return true;
+            } catch (IOException e) {
+                return false;
             }
         }
     }
@@ -134,8 +181,6 @@ public class DataUI extends JFrame {
     private JPanel newDataPanel(JTextField fileNameBox, JComboBox fileTypeBox) {
         JPanel dataPanel = new JPanel();
         dataPanel.setLayout(new GridLayout(2,2));
-        String[] fileTypesChoices = {".json",".csv"};
-        fileTypeBox = new JComboBox(fileTypesChoices);
         dataPanel.add(new JLabel("file name:"));
         dataPanel.add(new JLabel());
         dataPanel.add(fileNameBox);
@@ -153,12 +198,8 @@ public class DataUI extends JFrame {
             JTextField fileNameBox = new JTextField();
             String[] fileTypesChoices = {".json",".csv"};
             JComboBox fileTypeBox = new JComboBox(fileTypesChoices);
-            JPanel loadPanel = new JPanel();
-            loadPanel.setLayout(new GridLayout(2,2));
-            loadPanel.add(new JLabel("file name:"));
-            loadPanel.add(new JLabel());
-            loadPanel.add(fileNameBox);
-            loadPanel.add(fileTypeBox);
+            JPanel loadPanel = newDataPanel(fileNameBox, fileTypeBox);
+
             int result = JOptionPane.showConfirmDialog(null, loadPanel,
                     "Enter the file name under ./data/ to be imported: ", JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
