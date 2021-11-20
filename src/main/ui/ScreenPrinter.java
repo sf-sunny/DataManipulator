@@ -19,8 +19,6 @@ public class ScreenPrinter extends JInternalFrame {
 
     /**
      * Constructor sets up window in which columns will be printed on screen
-     *
-     * @param parent the parent component
      */
     public ScreenPrinter(Component parent) {
         super("Columns", true, true, false, false);
@@ -33,11 +31,13 @@ public class ScreenPrinter extends JInternalFrame {
         setVisible(true);
     }
 
+    //EFFECTS: print information of data and whole data
     public void printData(Data data) {
         printDataInfo(data);
         printColumns(data, true);
     }
 
+    //EFFECTS: print information of data
     public void printDataInfo(Data data) {
         String indexColInfo = "";
         if (data.getIndex() == -1) {
@@ -56,6 +56,8 @@ public class ScreenPrinter extends JInternalFrame {
 
     }
 
+    //EFFECTS: print whole data if whole == true,
+    // else print newly added columns
     public void printColumns(Data d, boolean whole) {
         List<Column> list = new LinkedList<>();
         for (int i = whole ? 0 : d.getInitialNumOfCol(); i < d.getNumOfCol(); i++) {
@@ -85,8 +87,6 @@ public class ScreenPrinter extends JInternalFrame {
     /**
      * Sets the position of window in which log will be printed relative to
      * parent
-     *
-     * @param parent the parent component
      */
     private void setPosition(Component parent) {
         setLocation(parent.getWidth() - getWidth() - 20,

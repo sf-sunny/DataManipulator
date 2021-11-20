@@ -58,6 +58,7 @@ public class DataUI extends JFrame {
         setVisible(true);
     }
 
+    //EFFECTS: show logo when the program starts
     private void showLogo() throws InterruptedException {
         JFrame logoFrame = new JFrame();
         logoFrame.setLayout(new BorderLayout());
@@ -84,22 +85,23 @@ public class DataUI extends JFrame {
         java.util.concurrent.TimeUnit.SECONDS.sleep(4);
     }
 
-    /**
-     * Helper to centre main application window on desktop
-     */
+
+    //EFFECTS: a helper method to centre main application window on desktop
     private void centreOnScreen() {
         int width = Toolkit.getDefaultToolkit().getScreenSize().width;
         int height = Toolkit.getDefaultToolkit().getScreenSize().height;
         setLocation((width - getWidth()) / 2, (height - getHeight()) / 2);
     }
 
+    //EFFECTS: centre a frame window on desktop
     private void centreOnScreen(JFrame frame) {
         int width = Toolkit.getDefaultToolkit().getScreenSize().width;
         int height = Toolkit.getDefaultToolkit().getScreenSize().height;
         frame.setLocation((width - frame.getWidth()) / 2, (height - frame.getHeight()) / 2);
     }
 
-
+    //MODIFIES: this
+    //EFFECTS: add button panel
     private void addButtonPanel() {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(2,1));
@@ -112,6 +114,8 @@ public class DataUI extends JFrame {
         controlPanel.add(buttonPanel, BorderLayout.WEST);
     }
 
+    //MODIFIES: this
+    //EFFECTS: add menu
     private void addMenu() {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
@@ -131,6 +135,8 @@ public class DataUI extends JFrame {
      * @param action   handler for new menu item
      * @param accelerator    keystroke accelerator for this menu item
      */
+    //MODIFIES: theMenu
+    //EFFECTS: add menuItem to theMenu
     private void addMenuItem(JMenu theMenu, AbstractAction action, KeyStroke accelerator) {
         JMenuItem menuItem = new JMenuItem(action);
         menuItem.setMnemonic(menuItem.getText().charAt(0));
@@ -138,6 +144,8 @@ public class DataUI extends JFrame {
         theMenu.add(menuItem);
     }
 
+
+    //represents a save data action
     private class SaveDataAction extends AbstractAction {
         SaveDataAction() {
             super("Save Data As .json");
@@ -165,6 +173,8 @@ public class DataUI extends JFrame {
             }
         }
 
+        //MODIFIES: this
+        //EFFECTS: save data to ./data/fileName
         private boolean saveJson(String fileName) {
             try {
                 JsonWriter writer = new JsonWriter("./data/" + fileName);
@@ -178,6 +188,8 @@ public class DataUI extends JFrame {
         }
     }
 
+
+    //EFFECTS: return a Panel of save/load
     private JPanel newDataPanel(JTextField fileNameBox, JComboBox fileTypeBox) {
         JPanel dataPanel = new JPanel();
         dataPanel.setLayout(new GridLayout(2,2));
@@ -188,6 +200,7 @@ public class DataUI extends JFrame {
         return dataPanel;
     }
 
+    //represents a load data action
     private class LoadDataAction extends AbstractAction {
         LoadDataAction() {
             super("Load Data As..");
@@ -216,6 +229,8 @@ public class DataUI extends JFrame {
             }
         }
 
+        //MODIFIES: this
+        //EFFECTS: load data from ./data/fileName (in .json)
         private boolean loadJson(String fileName) {
             try {
                 JsonReader reader = new JsonReader("./data/" + fileName);
@@ -228,6 +243,8 @@ public class DataUI extends JFrame {
             }
         }
 
+        //MODIFIES: this
+        //EFFECTS: load data to ./data/fileName (in .csv)
         private boolean loadCsv(String fileName) {
             Data d = new Data();
             if (d.importFile(fileName)) {
@@ -241,6 +258,7 @@ public class DataUI extends JFrame {
         }
     }
 
+    //represents action of adding column to data
     private class ColumnAction extends AbstractAction {
         ColumnAction() {
             super("Add Column");
@@ -265,10 +283,8 @@ public class DataUI extends JFrame {
         }
     }
 
-    /**
-     * Represents the action to be taken when the user wants to
-     * print the Data/newly added columns.
-     */
+    //Represents the action to be taken when the user wants to
+    //print the Data/newly added columns.
     private class PrintDataAction extends AbstractAction {
         PrintDataAction() {
             super("Print Data/Newly Added Columns?");
@@ -290,10 +306,8 @@ public class DataUI extends JFrame {
 
     }
 
-    /**
-     * Represents the action to be taken when the user wants to
-     * specify data type of each columns
-     */
+    //Represents the action to be taken when the user
+    // wants to specify data type of each columns
     private class SpecifyTypeAction extends AbstractAction {
         SpecifyTypeAction() {
             super("Specify data types of Columns");
@@ -346,58 +360,5 @@ public class DataUI extends JFrame {
         return printCombo;
     }
 
-/*
-    //EFFECT: if remove == True: removes column and return a new Column
-    //          else return a chosen Column
-    private Column chooseCol(Boolean remove) {
-        String selection = "";
-        while (!selection.equals("i") && !selection.equals("n")) {
-            System.out.println("Choose Column by:");
-            System.out.println("i -> integer index");
-            System.out.println("n -> name of Column");
-            selection = input.next();
-        }
-
-        if (selection.equals("i")) {
-            return chooseColByInt(remove);
-        } else {
-            return chooseColByName(remove);
-        }
-    }
-
-    //EFFECT: if remove == True: removes column and return a new Column
-    //          else return a chosen Column
-    private Column chooseColByInt(Boolean remove) {
-        int n = -1;
-        while (n < 0) {
-            n = checkIntInput(data.getNumOfCol(), "integer index of col");
-        }
-        if (remove) {
-            data.removeCol(n);
-            return new Column();
-        } else {
-            return data.getCol(n);
-        }
-    }
-
-    //EFFECT: if remove == True: removes column and return a new Column
-    //          else return a chosen Column
-    private Column chooseColByName(Boolean remove) {
-        String s = "";
-        while (!data.getNames().contains(s)) {
-            System.out.print("Enter name of Column: ");
-            s = input.next();
-            if (!data.getNames().contains(s)) {
-                System.out.println("Invalid name.");
-            }
-        }
-        if (remove) {
-            data.removeCol(s);
-            return new Column();
-        } else {
-            return data.getCol(s);
-        }
-    }
-*/
 
 }

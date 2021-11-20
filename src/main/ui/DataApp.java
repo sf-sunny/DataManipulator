@@ -110,7 +110,7 @@ public class DataApp {
         System.out.println("\tdt -> specify data types of Columns");
         System.out.println("\tind -> specify Index column");
         System.out.println("\ta -> do arithmetics (+,-,*,/)");
-        System.out.println("\tc -> con`catenate csv files (under ./data/)"); //do import, Index
+        System.out.println("\tc -> concatenate csv files (under ./data/)"); //do import, Index
         System.out.println("\tcol -> add/remove Column");
         System.out.println("\trow -> add/remove row (entry)");
         System.out.println("\tv -> view Data");
