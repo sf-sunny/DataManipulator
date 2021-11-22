@@ -2,6 +2,9 @@ package ui;
 
 import model.Column;
 import model.Data;
+import model.Event;
+import model.EventLog;
+import model.exception.LogException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
@@ -9,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +44,7 @@ public class DataUI extends JFrame {
         }
         columnAdded = new LinkedList<>();
         desktop = new JDesktopPane();
-        //desktop.addMouseListener(new DesktopFocusAction());
+        addCloseListener();
         controlPanel = new JInternalFrame("Control Panel", false, false, false, false);
         controlPanel.setLayout(new BorderLayout());
 
@@ -56,6 +61,16 @@ public class DataUI extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         centreOnScreen();
         setVisible(true);
+    }
+
+    //EFFECTS: detect closing of application and then print logs to console
+    private void addCloseListener() {
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent we) {
+                ConsolePrinter cp = new ConsolePrinter();
+                cp.printLog(EventLog.getInstance());
+            }
+        });
     }
 
     //EFFECTS: show logo when the program starts
@@ -104,11 +119,12 @@ public class DataUI extends JFrame {
     //EFFECTS: add button panel
     private void addButtonPanel() {
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(2,1));
+        buttonPanel.setLayout(new GridLayout(3,2));
         buttonPanel.add(new JButton(new ColumnAction())); //add new column
         buttonPanel.add(new JButton(new SpecifyTypeAction())); //specify data type
         buttonPanel.add(new JButton(new PrintDataAction())); //view ALL or only ADDED
         buttonPanel.add(createPrintCombo());
+        buttonPanel.add(new JButton(new PrintLogAction()));
 
 
         controlPanel.add(buttonPanel, BorderLayout.WEST);
@@ -358,6 +374,30 @@ public class DataUI extends JFrame {
         printCombo.addItem("Whole Data");
         printCombo.addItem("Newly Added Columns");
         return printCombo;
+    }
+
+    /**
+     * Represents the action to be taken when the user wants to
+     * print the event log.
+     */
+    private class PrintLogAction extends AbstractAction {
+        PrintLogAction() {
+            super("Print log to...");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            LogPrinter lp;
+            try {
+                lp = new ScreenPrinter(DataUI.this);
+                desktop.add((ScreenPrinter) lp);
+
+                lp.printLog(EventLog.getInstance());
+            } catch (LogException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
 

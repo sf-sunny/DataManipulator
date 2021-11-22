@@ -96,6 +96,7 @@ public class Data implements Writable {
         numOfCol = c;
         setInitialNumOfCol(c);
         numOfRow = r - 1;
+        EventLog.getInstance().logEvent(new Event("File imported: " + filePath));
         return true;
     }
 
@@ -129,6 +130,8 @@ public class Data implements Writable {
     //EFFECTS: change actual type of elements of columns
     public void specifyColType(Column col, String colType) {
         col.specifyType(colType);
+        EventLog.getInstance().logEvent(new Event("Data type of Column \""
+                + col.getName() + "\" is specified as: " + colType));
     }
 
     //REQUIRES: a list with length == numOfColumn,
@@ -233,6 +236,8 @@ public class Data implements Writable {
         if (getNumOfRow() == 0) {
             numOfRow = col.getSize();
         }
+        EventLog.getInstance().logEvent(new Event("Column \""
+                + col.getName() + "\" is added."));
     }
 
     //REQUIRES: 0 <= colNum < numOfCol

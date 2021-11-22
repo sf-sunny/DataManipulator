@@ -2,6 +2,9 @@ package ui;
 
 import model.Column;
 import model.Data;
+import model.Event;
+import model.EventLog;
+import model.exception.LogException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +15,7 @@ import java.util.List;
  * Represents a screen printer for printing Data/Column(s) to screen.
  */
 //reference: CPSC 210 AlarmSystem https://github.students.cs.ubc.ca/CPSC210/AlarmSystem
-public class ScreenPrinter extends JInternalFrame {
+public class ScreenPrinter extends JInternalFrame implements LogPrinter {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
     private JTextArea textArea;
@@ -91,5 +94,14 @@ public class ScreenPrinter extends JInternalFrame {
     private void setPosition(Component parent) {
         setLocation(parent.getWidth() - getWidth() - 20,
                 parent.getHeight() - getHeight() - 20);
+    }
+
+    @Override
+    public void printLog(EventLog el) {
+        for (Event next : el) {
+            textArea.setText(textArea.getText() + next.toString() + "\n\n");
+        }
+
+        repaint();
     }
 }
