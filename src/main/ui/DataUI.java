@@ -382,7 +382,7 @@ public class DataUI extends JFrame {
      */
     private class PrintLogAction extends AbstractAction {
         PrintLogAction() {
-            super("Print log to...");
+            super("Print log to Screen");
         }
 
         @Override

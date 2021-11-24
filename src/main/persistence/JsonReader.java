@@ -29,7 +29,7 @@ public class JsonReader {
     public Data read() throws IOException {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
-        EventLog.getInstance().logEvent(new Event("File read: " + source));
+        //EventLog.getInstance().logEvent(new Event("File read: " + source));
         return parseData(jsonObject);
     }
 

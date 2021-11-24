@@ -6,7 +6,7 @@ This application helps users who want to manipulate data to do so.
 ## User Stories
 ### Some *functions* that user could do:
 - *import* csv files and save as Data class \**
-- *specify* data types of each columns in the csv files
+- *specify* data types of each column in the csv files
 - *specify* index column of Data
 - do *arithmetics (+,-,\*,/)* on columns
 - *concatenate* csv files
@@ -17,3 +17,21 @@ This application helps users who want to manipulate data to do so.
 - *load* Data by .json **
 
 **: users can import/load/save files under *./data/*
+
+---
+###Phase 4: Task 2
+A representative sample of the events that occur when the program runs:
+```
+Wed Nov 24 13:59:08 PST 2021
+Column "Name" is added.
+
+Wed Nov 24 13:59:08 PST 2021
+Column "CSID" is added.
+
+Wed Nov 24 13:59:08 PST 2021
+Column "Age" is added.
+
+Wed Nov 24 13:59:08 PST 2021
+Column "Height" is added.
+```
+---

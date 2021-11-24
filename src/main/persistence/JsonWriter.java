@@ -33,8 +33,8 @@ public class JsonWriter {
     public void write(Data data) {
         JSONObject json = data.toJson();
         saveToFile(json.toString(TAB));
-        EventLog.getInstance().logEvent(new Event("Data saved: "
-                + destination));
+        //EventLog.getInstance().logEvent(new Event("Data saved: "
+        //        + destination));
     }
 
     // MODIFIES: this
