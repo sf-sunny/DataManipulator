@@ -35,3 +35,8 @@ Wed Nov 24 13:59:08 PST 2021
 Column "Height" is added.
 ```
 ---
+###Phase 4: Task 3
+If you had more time to work on the project, is there any refactoring that you would do to improve your design? 
+- If I had more time, I would have applied composite pattern on "Data" and "Column", 
+so that "Data" can contain "Data" and "Column", 
+and thus easier for concatenating "Data".
