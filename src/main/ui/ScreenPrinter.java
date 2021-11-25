@@ -4,7 +4,6 @@ import model.Column;
 import model.Data;
 import model.Event;
 import model.EventLog;
-import model.exception.LogException;
 
 import javax.swing.*;
 import java.awt.*;

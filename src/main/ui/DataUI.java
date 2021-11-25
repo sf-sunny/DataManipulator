@@ -2,16 +2,13 @@ package ui;
 
 import model.Column;
 import model.Data;
-import model.Event;
 import model.EventLog;
-import model.exception.LogException;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -388,15 +385,11 @@ public class DataUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent evt) {
             LogPrinter lp;
-            try {
-                lp = new ScreenPrinter(DataUI.this);
-                desktop.add((ScreenPrinter) lp);
+            lp = new ScreenPrinter(DataUI.this);
+            desktop.add((ScreenPrinter) lp);
 
-                lp.printLog(EventLog.getInstance());
-            } catch (LogException e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "System Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
+            lp.printLog(EventLog.getInstance());
+
         }
     }
 
