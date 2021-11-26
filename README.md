@@ -19,7 +19,7 @@ This application helps users who want to manipulate data to do so.
 **: users can import/load/save files under *./data/*
 
 ---
-###Phase 4: Task 2
+### Phase 4: Task 2
 A representative sample of the events that occur when the program runs:
 ```
 Wed Nov 24 13:59:08 PST 2021
@@ -35,7 +35,7 @@ Wed Nov 24 13:59:08 PST 2021
 Column "Height" is added.
 ```
 ---
-###Phase 4: Task 3
+### Phase 4: Task 3
 If you had more time to work on the project, is there any refactoring that you would do to improve your design? 
 - If I had more time, I would have applied composite pattern on "Data" and "Column", 
 so that "Data" can contain "Data" and "Column", 
